@@ -1,4 +1,4 @@
-import od
+import os
 
 # grab the folder where this scrip lives
 basedir = os.path.abspath(os.path.dirname(__file__))
