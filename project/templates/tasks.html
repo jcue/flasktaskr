@@ -1,8 +1,9 @@
 {% extends "_base.html" %}
 {% block content %}
 
+
 <h1>Welcome to FlaskTaskr</h1>
-<a href="/logout">Logout</a>
+<a href={{"/logout"}}>Logout</a>
 <div class="add-task">
     <h3>Add a new task:</h3>
     <table>
@@ -36,7 +37,6 @@
                     &nbsp;
                     <input class="button" type="submit" value="Save">
                 </td>
-            </tr>
         </form>
     </tr>
 </table>
@@ -71,6 +71,8 @@
     <br>
     <br>
 </div>
+
+
 <div class="entries">
     <h2>Closed tasks:</h2>
     <div class="datagrid">
@@ -89,12 +91,12 @@
                 <td width="100px">{{ task.due_date }}</td>
                 <td width="50px">{{ task.priority }}</td>
                 <td>
-                    <a href="{{ url_for('delete entry', task_id = task.task_id) }}">Delete</a>
+                  <a href="{{ url_for('delete_entry', task_id = task.task_id) }}">Delete</a>
                 </td>
                 </tr>
         {% endfor %}
     </table>
-</div>
+ </div>
 </div>
 
 {% endblock %}                
