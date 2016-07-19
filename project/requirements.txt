@@ -1,0 +1,18 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: win-64
+flask=0.10.1=py27_2
+flask-wtf=0.11=py27_0
+wtforms=2.0.2=py27_0
+flask-sqlalchemy=2.0=py27_0
+click=6.6=py27_0
+itsdangerous=0.24=py27_0
+jinja2=2.8=py27_1
+markupsafe=0.23=py27_2
+pip=8.1.2=py27_0
+python=2.7.11=4
+setuptools=23.0.0=py27_0
+sqlalchemy=1.0.13=py27_0
+vs2008_runtime=9.00.30729.1=1
+werkzeug=0.11.10=py27_0
+wheel=0.29.0=py27_0
