@@ -108,7 +108,8 @@ def new_task():
             db.session.add(new_task)
             db.session.commit()
             flash('New entry was successfully posted. Thanks.')
-        return redirect(url_for('tasks'))
+    # flash('come on dude') # can add flash() if something entered incorrectly
+    return redirect(url_for('tasks'))
 
 
 # Mark tasks as complete
