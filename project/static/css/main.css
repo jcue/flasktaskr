@@ -54,8 +54,9 @@ background: #CEE5F5;
 padding: 0.5em;
 }
 .error {
-background: #EEB8B8;
-padding: 0.5em;
+color: red;
+font-size: .8em;
+background-color: #FFFFFF;
 }
 .datagrid table {
 border-collapse: collapse;
