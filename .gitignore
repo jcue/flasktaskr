@@ -10,3 +10,6 @@
 */.idea
 *.sublime-project
 *.sublime-workspace
+*.coverage
+*htmlcov
+htmlcov

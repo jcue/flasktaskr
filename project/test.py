@@ -6,7 +6,7 @@ import unittest
 
 from views import app, db
 from _config import basedir
-from models import User 
+from models import User
 
 TEST_DB = 'test.db'
 
@@ -17,7 +17,7 @@ class AllTests(unittest.TestCase):
     #### setup and teardown ####
     ############################
 
-    # execute prior to each test
+    # executed prior to each test
     def setUp(self):
         app.config['TESTING'] = True
         app.config['WTF_CSRF_ENABLED'] = False
@@ -31,7 +31,44 @@ class AllTests(unittest.TestCase):
         db.session.remove()
         db.drop_all()
 
-    # each test should start with 'test'
+
+    ########################
+    #### helper methods ####
+    ########################
+
+    def login(self, name, password):
+        return self.app.post('/', data=dict(
+            name=name, password=password), follow_redirects=True)
+
+    def register(self, name, email, password, confirm):
+        return self.app.post(
+            'register/',
+            data=dict(name=name, email=email, password=password, confirm=confirm),
+            follow_redirects=True
+        )
+
+    def logout(self):
+        return self.app.get('logout/', follow_redirects=True)
+
+    def create_user(self, name, email, password):
+        new_user = User(name=name, email=email, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+
+    def create_task(self):
+        return self.app.post('add/', data=dict(
+            name='Go to the bank',
+            due_date='02/05/2015',
+            priority='1',
+            posted_date='02/04/2015',
+            status='1'
+        ), follow_redirects=True)
+
+
+    ###############
+    #### tests ####
+    ###############
+
     def test_users_can_register(self):
         new_user = User("michael", "michael@mherman.org", "michaelherman")
         db.session.add(new_user)
@@ -46,24 +83,18 @@ class AllTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Please sign in to access your task list', response.data)
 
-    def login(self, name, password):
-        return self.app.post('/', data=dict(name=name, password=password), follow_redirects=True)
-
     def test_users_cannot_login_unless_registered(self):
         response = self.login('foo', 'bar')
         self.assertIn(b'Invalid username or password.', response.data)
 
-    def register(self, name, email, password, confirm):
-        return self.app.post('register/', data=dict(name=name, email=email, password=password, confirm=confirm), follow_redirects=True)
-
     def test_users_can_login(self):
         self.register('Michael', 'michael@realpython.com', 'python', 'python')
         response = self.login('Michael', 'python')
-        self.assertIn('Welcome!', response.data)
+        self.assertIn(b'Welcome!', response.data)
 
-    def test_invalid_form_datea(self):
+    def test_invalid_form_data(self):
         self.register('Michael', 'michael@realpython.com', 'python', 'python')
-        response = self.login('alert("alert box!";', 'foo')
+        response = self.login('alert("alert box!");', 'foo')
         self.assertIn(b'Invalid username or password.', response.data)
 
     def test_form_is_present_on_register_page(self):
@@ -71,7 +102,7 @@ class AllTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Please register to access the task list.', response.data)
 
-    def user_registration(self):
+    def test_user_registration(self):
         self.app.get('register/', follow_redirects=True)
         response = self.register(
             'Michael', 'michael@realpython.com', 'python', 'python')
@@ -81,11 +112,13 @@ class AllTests(unittest.TestCase):
         self.app.get('register/', follow_redirects=True)
         self.register('Michael', 'michael@realpython.com', 'python', 'python')
         self.app.get('register/', follow_redirects=True)
-        response = self.register('Michael', 'michael@realpython.com', 'python', 'python')
-        self.assertIn(b'That username and/or email already exist.', response.data)
-
-    def logout(self):
-        return self.app.get('logout/', follow_redirects=True)
+        response = self.register(
+            'Michael', 'michael@realpython.com', 'python', 'python'
+        )
+        self.assertIn(
+            b'That username and/or email already exist.',
+            response.data
+        )
 
     def test_logged_in_users_can_logout(self):
         self.register('Fletcher', 'fletcher@realpython.com', 'python101', 'python101')
@@ -99,7 +132,8 @@ class AllTests(unittest.TestCase):
 
     def test_logged_in_users_can_access_tasks_page(self):
         self.register(
-            'Fletcher', 'fletcher@realpython.com', 'python101', 'python101')
+            'Fletcher', 'fletcher@realpython.com', 'python101', 'python101'
+        )
         self.login('Fletcher', 'python101')
         response = self.app.get('tasks/')
         self.assertEqual(response.status_code, 200)
@@ -109,26 +143,14 @@ class AllTests(unittest.TestCase):
         response = self.app.get('tasks/', follow_redirects=True)
         self.assertIn(b'You need to login first.', response.data)
 
-    def create_user(self, name, email, password):
-        new_user = User(name=name, email=email, password=password)
-        db.session.add(new_user)
-        db.session.commit()
-
-    def create_task(self):
-        return self.app.post('add/', data=dict(
-            name='Go to the bank',
-            due_date='02/05/2014',
-            priority='1',
-            posted_date='02/04/2014',
-            status='1'
-        ), follow_redirects=True)
-
     def test_users_can_add_tasks(self):
         self.create_user('Michael', 'michael@realpython.com', 'python')
         self.login('Michael', 'python')
         self.app.get('tasks/', follow_redirects=True)
         response = self.create_task()
-        self.assertIn(b'New entry was successfully posted. Thanks.', response.data)
+        self.assertIn(
+            b'New entry was successfully posted. Thanks.', response.data
+        )
 
     def test_users_cannot_add_tasks_when_error(self):
         self.create_user('Michael', 'michael@realpython.com', 'python')
@@ -152,7 +174,7 @@ class AllTests(unittest.TestCase):
         self.assertIn(b'The task is complete. Nice.', response.data)
 
     def test_users_can_delete_tasks(self):
-        self.create_user('Michael', 'michael@realpython', 'python')
+        self.create_user('Michael', 'michael@realpython.com', 'python')
         self.login('Michael', 'python')
         self.app.get('tasks/', follow_redirects=True)
         self.create_task()
@@ -170,7 +192,9 @@ class AllTests(unittest.TestCase):
         self.app.get('tasks/', follow_redirects=True)
         response = self.app.get("complete/1/", follow_redirects=True)
         self.assertNotIn(
-            b'The task is complete. nice.', response.data)
+            b'The task is complete. Nice.', response.data
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
