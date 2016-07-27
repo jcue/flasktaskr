@@ -11,3 +11,8 @@ body {
   color: red;
   font-size: .8em;
 }
+
+.navbar-inverse .navbar-brand {
+    color: silver;
+    font-family: Impact, Haettenschweiler, "Franklin Gothic Bold", Charcoal, "Helvetica Inserat", "Bitstream Vera Sans Bold", "Arial Black", sans serif;
+}
