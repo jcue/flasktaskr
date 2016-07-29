@@ -1,7 +1,7 @@
 # project/models.py
 
 
-from views import db
+from project import db
 
 import datetime
 
@@ -34,7 +34,6 @@ class User(db.Model):
 
     __tablename__ = 'users'
 
-    # id to be joined with user_id in tasks table
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
