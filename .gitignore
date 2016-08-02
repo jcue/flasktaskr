@@ -1,4 +1,5 @@
-## generic files to ignore
+flaskenv
+venv
 *~
 *.lock
 *.DS_Store
