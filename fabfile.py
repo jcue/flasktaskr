@@ -19,19 +19,6 @@ def push():
     branch = raw_input("Which branch do you want to push to? ")
     local("git push origin {}".format(branch))
 
-
-def prepare():
-    test()
-    commit()
-    push()
-
-
-def push():
-    local("git push origin master")
-    branch = raw_input("Which branch do you want to push to? ")
-    local("git push origin {}".format(branch))
-
-
 def prepare():
     test()
     commit()
