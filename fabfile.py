@@ -2,6 +2,8 @@ from fabric.api import local, settings, abort
 from fabric.contrib.console import confirm
 
 
+# prep
+
 def test():
     with settings(warn_only=True):
         result = local("nosetests -v", capture=True)
@@ -18,6 +20,7 @@ def push():
     local("git branch")
     branch = raw_input("Which branch do you want to push to? ")
     local("git push origin {}".format(branch))
+
 
 def prepare():
     test()
@@ -40,9 +43,9 @@ def heroku_test():
 
 
 def deploy():
-    # pull()
+    pull()
     test()
-    # commit()
+    commit()
     heroku()
     heroku_test()
 
