@@ -60,11 +60,11 @@
       </thead>
       {% for task in open_tasks %}
         <tr>
+          <td>{{ task.id }}</td>
           <td>{{ task.name }}</td>
-          <td>{{ task.due_date }}</td>
-          <td>{{ task.posted_date }}</td>
-          <td>{{ task.priority }}</td>
-          <td>{{ task.poster.name }}</td>
+          <td>{{ task.email }}</td>
+          <td>{{ task.password }}</td>
+          <td>{{ task.user_type }}</td>
           <td>
           {% if task.poster.name == session.name or session.role == "admin" %}
             <a href="{{ url_for('tasks.delete_entry', task_id = task.task_id) }}">Delete</a>  -
